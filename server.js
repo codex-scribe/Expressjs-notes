@@ -2,6 +2,7 @@ const express = require("express");
 const path = require("path");
 const db = require("./db/db.json");
 const fs = require("fs");
+const { v4:generateId } = require('uuid');
 
 const app = express();
 const PORT = 3001;
@@ -20,8 +21,9 @@ app.post("/api/notes", (req, res) => {
   res.json(`${req.method} request received/json frontend`);
   const { title, text } = req.body;
   if (title && text) {
-  const newNote = { title, text };
+  const newNote = { id: generateId(), title, text };
   fs.readFile("./db/db.json", "utf8", (err, data) => {
+    // console.log(data)
     if (err) {
       console.error(err);
     } else {
@@ -57,3 +59,35 @@ app.get("/api/notes", (req, res) =>
 app.listen(PORT, () =>
   console.log(`Note taking app listening at http://localhost:${PORT}.`)
 );
+
+//request for deleting notes
+app.delete('/api/notes/:id', (req, res) =>
+  {
+    fs.readFile("./db/db.json", "utf8", (err, data) => {
+      // console.log(data)
+      if (err) {
+        console.error(err);
+      } else {
+        const savedNotes = JSON.parse(data);
+        const filteredNotes = savedNotes.filter((note) => {
+          return note.id !== req.params.id
+        })
+        console.log(filteredNotes);
+        fs.writeFile(
+          "./db/db.json",
+          JSON.stringify(filteredNotes, null, 4),
+          (writeErr) =>
+            writeErr
+              ? console.error(writeErr)
+              : console.info("successfully deleted note!")
+        );
+      }
+    });
+    const response = {
+      status: "success",
+      body: "Successfully deleted note",
+    };
+    console.log(response);
+    res.status(201).json(response);}
+  
+)
