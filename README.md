@@ -10,7 +10,7 @@ To write a new note, click the plus sign on the top right, and then type a note 
 
 ## Required software
 Any web browser is sufficient to access this application.
-[Note taker app]()
+[Note taker app](https://stark-forest-43737.herokuapp.com/notes)
 
 ## Creator
 This application was created by Matt Brandenburgh.  It can be found at github.com/codex-scribe.  Contact him there for any further questions.
